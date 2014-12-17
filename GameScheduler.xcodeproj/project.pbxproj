@@ -87,6 +87,8 @@
 		D42BBFC71A3FC74000B223D8 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				D47D216E1A0F991D007E96AF /* GameScene.h */,
+				D47D216F1A0F991D007E96AF /* GameScene.m */,
 				D42C67CA1A153EB20097CBD1 /* RandomNode.h */,
 				D42C67CB1A153EB20097CBD1 /* RandomNode.m */,
 				D42C67CD1A1549AB0097CBD1 /* AvoidNode.h */,
@@ -94,7 +96,7 @@
 				D4497D551A165500000605B6 /* FollowNode.h */,
 				D4497D561A165500000605B6 /* FollowNode.m */,
 			);
-			name = Examples;
+			path = Examples;
 			sourceTree = "<group>";
 		};
 		D42C67C81A153D650097CBD1 /* Resources */ = {
@@ -140,8 +142,6 @@
 		D47D21661A0F991D007E96AF /* GameScheduler */ = {
 			isa = PBXGroup;
 			children = (
-				D47D216E1A0F991D007E96AF /* GameScene.h */,
-				D47D216F1A0F991D007E96AF /* GameScene.m */,
 				D42BBFC71A3FC74000B223D8 /* Examples */,
 				D47D21921A0F9967007E96AF /* Scheduler */,
 				D42C67C91A153D770097CBD1 /* Default Stuff */,
@@ -189,7 +189,7 @@
 				D47D21A41A0F9B51007E96AF /* ScheduleObject.h */,
 				D47D21A51A0F9B51007E96AF /* ScheduleObject.m */,
 			);
-			name = Scheduler;
+			path = Scheduler;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
