@@ -15,8 +15,8 @@
 ### Using Submodules
 1. Open Terminal
 2. Type: 
-	cd to/your/project (where you .h .m & .swift files are)
+> cd to/your/project (where you .h .m & .swift files are)
 3. Type: 
-	git submodule add
+> git submodule add
 
 
