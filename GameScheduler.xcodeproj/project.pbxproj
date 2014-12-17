@@ -47,8 +47,8 @@
 		D47D216C1A0F991D007E96AF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		D47D216E1A0F991D007E96AF /* GameScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
 		D47D216F1A0F991D007E96AF /* GameScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameScene.m; sourceTree = "<group>"; };
-		D47D21731A0F991D007E96AF /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
-		D47D21741A0F991D007E96AF /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
+		D47D21731A0F991D007E96AF /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GameViewController.h; path = ../Examples/GameViewController.h; sourceTree = "<group>"; };
+		D47D21741A0F991D007E96AF /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = GameViewController.m; path = ../Examples/GameViewController.m; sourceTree = "<group>"; };
 		D47D21771A0F991D007E96AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D47D21791A0F991D007E96AF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D47D217C1A0F991D007E96AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -114,8 +114,6 @@
 			children = (
 				D47D216B1A0F991D007E96AF /* AppDelegate.h */,
 				D47D216C1A0F991D007E96AF /* AppDelegate.m */,
-				D47D21731A0F991D007E96AF /* GameViewController.h */,
-				D47D21741A0F991D007E96AF /* GameViewController.m */,
 				D42C67C81A153D650097CBD1 /* Resources */,
 			);
 			name = "Default Stuff";
@@ -181,6 +179,8 @@
 		D47D21921A0F9967007E96AF /* Scheduler */ = {
 			isa = PBXGroup;
 			children = (
+				D47D21731A0F991D007E96AF /* GameViewController.h */,
+				D47D21741A0F991D007E96AF /* GameViewController.m */,
 				D47D21931A0F99A0007E96AF /* ScheduledBlock.h */,
 				D47D219C1A0F99A0007E96AF /* Updatable.h */,
 				D47D21A11A0F99F4007E96AF /* Scheduler.h */,
