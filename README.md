@@ -61,4 +61,4 @@ Schedule a block to be called each frame. If you just hit return on the block's 
 ## Tips
 - Remeber to unschedule your objects, groups and blocks when they've no longer needed. I use an extra interface on game objects which gives them an `addedToScene:` and `removedFromScene:` message from their parent, which allows the object to unschedule itself or anything it has scheduled.
 - You can always use `[[Scheduler sharedScheduler] unscheduleAll];` to stop all schedules.
-- You can use the `dt` parameter of `sceneUpdate` to make your logic not rely on the framerate of the game. This can be done by dividing the constant you're applying by 60 (**the number frames)** then multiplying it by `dt`.
+- You can use the `dt` parameter of `sceneUpdate` to make your game's logic framerate independant. This can be done by dividing the constant you're applying by 60 (**the number frames**) then multiplying it by `dt`.
