@@ -14,7 +14,7 @@
 ## Instructions For Setup
 #### Using Submodules (Best)
 1. Open Terminal
-2. Type: `cd to/your/project` (where you .h, .m & .swift files are)
+2. Type: `cd to/your/project` (where your .xcodeproj is)
 3. Type: `git submodule add git@github.com:robb-j/GameScheduler.git`
 4. Open your project in Xcode
 5. Import the files in GameScheduler/Scheduler to your project
