@@ -12,7 +12,7 @@
 	
 	void (^_block)(void);  
 }
-+ (instancetype)updatableWithConition:(void(^)(void))block {
++ (instancetype)updatableWithCondition:(void(^)(void))block {
 	
 	return [[self alloc] initWithConition:block];
 }

@@ -51,7 +51,7 @@
 		
 	__block BOOL wasCalled = NO;
 	
-	MockUpdatable *object = [MockUpdatable updatableWithConition:^{
+	MockUpdatable *object = [MockUpdatable updatableWithCondition:^{
 		
 		wasCalled = YES;
 	}];
@@ -67,7 +67,7 @@
 	
 	__block BOOL wasCalled = NO;
 	
-	MockUpdatable *object = [MockUpdatable updatableWithConition:^{
+	MockUpdatable *object = [MockUpdatable updatableWithCondition:^{
 		
 		wasCalled = YES;
 	}];
@@ -98,7 +98,7 @@
 #pragma mark - Test Removal
 - (void)testObjectRemove {
 	
-	MockUpdatable *object = [MockUpdatable updatableWithConition:^{
+	MockUpdatable *object = [MockUpdatable updatableWithCondition:^{
 		XCTFail(@"This object shouldn't get a tick");
 	}];
 	[_testScheduler scheduleObject:object];
@@ -110,7 +110,7 @@
 
 - (void)testGroupRemove {
 	
-	MockUpdatable *object = [MockUpdatable updatableWithConition:^{
+	MockUpdatable *object = [MockUpdatable updatableWithCondition:^{
 		XCTFail(@"This object shouldn't get a tick");
 	}];
 	NSString *identifier = @"TestId";
@@ -136,7 +136,7 @@
 }
 
 
-#pragma mark - 
+#pragma mark - Test More
 - (void)testPriorityAdd {
 	
 	NSString *id1 = @"A";
@@ -234,7 +234,7 @@
 		
 		callCount ++;
 		
-	} identifier:id1];
+	} priority:2 identifier:id1];
 	
 	[_testScheduler scheduleBlock:^(CFTimeInterval dt, CFTimeInterval elapsedTime, BOOL *cancel) {
 		
@@ -245,7 +245,7 @@
 		
 		flag = YES;
 		
-	} identifier:id2];
+	} priority: 1 identifier:id2];
 	
 	
 	// First tick unschedules the block
@@ -264,7 +264,7 @@
 	
 	__block NSInteger callCount = 0;
 	
-	MockUpdatable *o1 = [MockUpdatable updatableWithConition:^{
+	MockUpdatable *o1 = [MockUpdatable updatableWithCondition:^{
 		
 		if (callCount == 0) {
 		
@@ -288,7 +288,38 @@
 	[_testScheduler tickScheduler:0.0];
 }
 
-
+- (void)testExtraCallWhenRemoved {
+	
+	__block BOOL flag = YES;
+	
+	
+	// This one sets a flag to yes
+	MockUpdatable *o1 = [MockUpdatable updatableWithCondition:^{
+		
+		// This shouldn't get called
+		flag = NO;
+	}];
+	
+	
+	// This one cancels the first
+	MockUpdatable *o2 = [MockUpdatable updatableWithCondition:^{
+		
+		[[Scheduler sharedScheduler] unscheduleObject:o1];
+	}];
+	
+	
+	// Schedule so o2 before o1
+	[[Scheduler sharedScheduler] scheduleObject:o1 priority:1];
+	[[Scheduler sharedScheduler] scheduleObject:o2 priority:2];
+	
+	
+	// Tick the scheduler
+	[[Scheduler sharedScheduler] tickScheduler:0.0];
+	
+	
+	// The flag should still be true
+	XCTAssertTrue(flag);
+}
 
 
 

@@ -19,7 +19,7 @@
 
 
 
--(void)didMoveToView:(SKView *)view {
+- (void)didMoveToView:(SKView *)view {
     
 	[self demoBlockUpdate];
 	
@@ -101,7 +101,7 @@
 	}];
 }
 
--(void)update:(CFTimeInterval)currentTime {
+- (void)update:(CFTimeInterval)currentTime {
     
 	/* 
 		Just remember to tell the Schedule to tick each frame!

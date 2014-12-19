@@ -45,5 +45,11 @@
 @property (nonatomic, readonly) NSInteger priority;
 
 
+/** Whether this object has been cancelled or not
+ Used when cancelling during iteration so that the 
+ Scheduler knows not to call it */
+@property (nonatomic) BOOL isCancelled;
+
+
 
 @end

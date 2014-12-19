@@ -60,6 +60,7 @@ typedef NS_ENUM(NSUInteger, ScheduleType) {
 		_type = type;
 		_priority = priority;
 		_elapsedTime = 0.0f;
+		_isCancelled = NO;
 		
 		_object = object;
 		_group = group;

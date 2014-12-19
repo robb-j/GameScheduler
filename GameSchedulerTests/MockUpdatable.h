@@ -11,6 +11,6 @@
 
 @interface MockUpdatable : NSObject <Updatable>
 
-+ (instancetype)updatableWithConition:(void(^)(void))block;
++ (instancetype)updatableWithCondition:(void(^)(void))block;
 
 @end

@@ -10,7 +10,7 @@
 #import "Scheduler+Parent.h"
 #import "ScheduleObject.h"
 
-#define kDefaultPriority			0
+#define kNoPriority									NSIntegerMax
 
 @implementation Scheduler {
 	
@@ -53,6 +53,7 @@ static Scheduler *_sharedInstance;
 
 
 
+#pragma mark - Annonymous Run Later
 - (void)afterDelay:(CFTimeInterval)delay runBlock:(void(^)(void))block {
 	
 	[self scheduleBlock:^(CFTimeInterval dt, CFTimeInterval elapsedTime, BOOL *cancel) {
@@ -72,7 +73,7 @@ static Scheduler *_sharedInstance;
 - (void)scheduleObject:(id<Updatable>)object {
 	
 	// Schedule with a default priority
-	[self scheduleObject:object priority:kDefaultPriority];
+	[self scheduleObject:object priority:kNoPriority];
 }
 
 - (void)scheduleObject:(id<Updatable>)object priority:(NSInteger)priority {
@@ -93,7 +94,7 @@ static Scheduler *_sharedInstance;
 - (void)scheduleGroup:(NSArray *)group identifier:(NSString *)identifier {
 	
 	// Schedule with a default priority
-	[self scheduleGroup:group priority:kDefaultPriority identifier:identifier];
+	[self scheduleGroup:group priority:kNoPriority identifier:identifier];
 }
 
 - (void)scheduleGroup:(NSArray *)group priority:(NSInteger)priority identifier:(NSString *)identifier {
@@ -114,7 +115,7 @@ static Scheduler *_sharedInstance;
 - (void)scheduleBlock:(ScheduleBlock)block identifier:(NSString *)identifier {
 	
 	// Schedule with a default priority
-	[self scheduleBlock:block priority:kDefaultPriority identifier:identifier];
+	[self scheduleBlock:block priority:kNoPriority identifier:identifier];
 }
 
 - (void)scheduleBlock:(ScheduleBlock)block priority:(NSInteger)priority identifier:(NSString *)identifier {
@@ -139,6 +140,12 @@ static Scheduler *_sharedInstance;
 		// If we are iterationg, cache to add after the iteration
 		[_addedDuringIteration addObject:object];
 	}
+	else if (object.priority == kNoPriority) {
+			
+		// If no priority is given, just put it on the end
+		[_allSchedules addObject:object];
+		
+	}
 	else {
 		
 		// Otherwise, get the insertion index, based on priority (Higher means earlier in the iteration)
@@ -157,27 +164,27 @@ static Scheduler *_sharedInstance;
 
 - (void)unschedule:(id)comparison {
 	
-	if ( _isIterating ) {
+	NSInteger count = _allSchedules.count;
+	ScheduleObject *object;
+	
+	
+	// Iterate through, comparing them with the provided object
+	for (int i = 0; i < count; i++) {
+		object = _allSchedules[i];
 		
-		// If we are iterating, cache for removal after the iteration
-		[_removedDuringIteration addObject:comparison];
-	}
-	else {
-		
-		
-		NSInteger count = _allSchedules.count;
-		ScheduleObject *object;
-		
-		
-		// Iterate through, comparing them with the provided object
-		for (int i = 0; i < count; i++) {
-			object = _allSchedules[i];
+		if ([object scheduleComparison:comparison]) {
 			
-			if ([object scheduleComparison:comparison]) {
+			if (_isIterating) {
+				
+				object.isCancelled = YES;
+				[_removedDuringIteration addObject:comparison];
+			}
+			else {
 				
 				[_allSchedules removeObjectAtIndex:i];
-				break;
 			}
+			
+			break;
 		}
 	}
 }
@@ -234,7 +241,10 @@ static Scheduler *_sharedInstance;
 	// Tick each object
 	for (ScheduleObject *object in _allSchedules) {
 		
-		[object tickObject:dt scheduler:self];
+		if ( ! object.isCancelled) {
+			
+			[object tickObject:dt scheduler:self];
+		}
 	}
 	
 	

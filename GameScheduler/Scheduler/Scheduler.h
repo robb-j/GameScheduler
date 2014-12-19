@@ -12,10 +12,11 @@
 
 
 /** An object that schedules objects and blocks for a 'tick' update. ie for each frame of a game. 
- For best practise, have priority in a constants file so you can see the order things get scheduled */
+ For best practise, have priority in a constants file so you can see the order things get scheduled. 
+ @Warning A higher priority means the schedule will get its update earlier
+ @warning If no priority is given, it will be scheduled last
+ */
 @interface Scheduler : NSObject
-
-// Higher priority means execution earlier
 
 
 /** Get the singleton scheduler */
