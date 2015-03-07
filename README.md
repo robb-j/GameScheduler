@@ -17,7 +17,7 @@
 2. Type: `cd to/your/project` (where your .xcodeproj is)
 3. Type: `git submodule add git@github.com:robb-j/GameScheduler.git`
 4. Open your project in Xcode
-5. Import the files in GameScheduler/Scheduler to your project
+5. Import the files in GameScheduler/Scheduler to your project, make sure to uncheck 'Copy items if needed'
 6. Wherever you need the Scheduler use `#import "Scheduler.h"`
 
 #### Manually (Dirty)
