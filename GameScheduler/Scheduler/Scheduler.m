@@ -231,6 +231,12 @@ static Scheduler *_sharedInstance;
 	[self tick:dt];
 }
 
+- (void)resetTick:(CFTimeInterval)currentTime {
+	
+	// Update the current time
+	_lastTime = currentTime;
+}
+
 - (void)tick:(CFTimeInterval)dt {
 	
 	
