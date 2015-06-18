@@ -17,6 +17,10 @@
 - (void)tickScheduler:(CFTimeInterval)currentTime;
 
 
+/**  Tell the scheduler to tick its alternate schedule */
+- (void)tickAltScheduler:(CFTimeInterval)currentTime;
+
+
 /** Tell the scheduler of a new current time without ticking all schedules, 
  	useful when a game is unpaused */
 - (void)resetTick:(CFTimeInterval)currentTime;

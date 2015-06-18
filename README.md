@@ -1,7 +1,8 @@
 # A SpriteKit Scheduling Singleton
 - Rob Anderson
 - robb-j
-- Dec 2014
+- Create: Dec 2014
+- Updated: Jun 2015
 
 
 ## Features
@@ -47,6 +48,7 @@ Schedule one of your objects to recieve a `sceneUpdate:` message each frame.
 Schedule a group of objects to recieve a `sceneUpdate:` message each frame. The objects will be called in the order they are in the array.
 - `[[Scheduler sharedScheduler] scheduleGroup: @[objectA, objectB, objectC] identifier: @"MyUniqueID"];`
 - `[[Scheduler sharedScheduler] scheduleGroup: myArrayOfUpdatables identifier: myUniqueIdentifier];`
+- `[[Scheduler sharedScheduler] scheduleGroup: myArrayOfUpdatables priority: 7 identifier: myUniqueIdentifier];`
 - `[[Scheduler sharedScheduler] unscheduleGroup: @"MyUniqueID"];`
 - `[[Scheduler sharedScheduler] unscheduleGroup: myUniqueIdentifier];`
 
@@ -58,7 +60,7 @@ Schedule a block to be called each frame. If you just hit return on the block's 
 
 ### Pausing & Resuming Schedules
 When you need to pause your schedules, call `resetTick:` with the current time before you resume them. This prevents there being a tick called with a large `dt` value, here is one way to achieve this:
-```
+```objc
 - (void)update:(CFTimeInterval)currentTime {
 	
 	if (isPaused == NO) {
@@ -71,9 +73,24 @@ When you need to pause your schedules, call `resetTick:` with the current time b
 ```
 Now you can just call `[[Scheduler sharedScheduler] resetTick:_pausedTime];` when you want to resume scheduling.
 
+### The Alternate Schedule
+Sometimes you need to have a seperate schedule which ticks at a different point during the scene rendering pipeline, for this we have an the alt schedule. An example use would be drawing a rope between two physics objects but the rest of your logic wants to happen before the physics is evaluated. To opt into this use `kAltPriority` as the priority when scheduling your object.
+```objc
+[[Scheduler sharedScheduler] scheduleObject: myObject priority: kAltPriority];
+```
+Then use something like this to tick it, where `_currentTime` is a cached value from the `sceneUpdate:` method:
+```objc
+- (void)didFinishUpdate {
+	
+	[[Scheduler sharedScheduler] tickAltScheduler:_currentTime];
+}
+```
+The obvious drawback is that you cannot prioritise these alternate schedules, this is beacuse it is meant for a couple of objects and most scheduling should be through the main channel.
+
+
 
 
 ## Tips
 - Remember to unschedule your objects, groups and blocks when they've no longer needed. I use an extra interface on game objects which gives them an `addedToScene:` and `removedFromScene:` message from their parent, which allows the object to unschedule itself or anything it has scheduled.
 - You can always use `[[Scheduler sharedScheduler] unscheduleAll];` to stop all schedules.
-- You can use the `dt` parameter of `sceneUpdate` to make your game's logic framerate independant. This can be done by dividing the constant you're applying by 60 (**the number frames**) then multiplying it by `dt`.
+- You can use the `dt` parameter of `sceneUpdate` to make your game's logic framerate independant. This can be done by dividing the constant you're applying by 60 (**the number frames per second**) then multiplying it by `dt`.

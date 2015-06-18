@@ -15,8 +15,10 @@
 #import "AvoidNode.h"
 #import "FollowNode.h"
 
-@implementation GameScene
-
+@implementation GameScene {
+	
+	CFTimeInterval _currentTime;
+}
 
 
 - (void)didMoveToView:(SKView *)view {
@@ -26,6 +28,13 @@
 	[self demoUpdatables];
 	
 	[self demoDelay];
+	
+	//[self demoAltTick];
+}
+
+- (void)willMoveFromView:(SKView *)view {
+	
+	[[Scheduler sharedScheduler] unscheduleAll];
 }
 
 
@@ -101,12 +110,43 @@
 	}];
 }
 
+- (void)demoAltTick {
+	
+	// Some normal schedules
+	[[Scheduler sharedScheduler] scheduleBlock:^(CFTimeInterval dt, CFTimeInterval elapsedTime, BOOL *cancel) {
+		
+		NSLog(@"Norm Tick B");
+		
+	} priority:5 identifier:@"DemoAlt1"];
+	
+	[[Scheduler sharedScheduler] scheduleBlock:^(CFTimeInterval dt, CFTimeInterval elapsedTime, BOOL *cancel) {
+		
+		NSLog(@"Norm Tick A");
+		
+	} priority:10 identifier:@"DemoAlt2"];
+	
+	
+	// An alternate schedule
+	[[Scheduler sharedScheduler] scheduleBlock:^(CFTimeInterval dt, CFTimeInterval elapsedTime, BOOL *cancel) {
+		
+		NSLog(@"*Alt Tick*");
+		
+	} priority:kAltPriority identifier:@"DemoAlt3"];
+}
+
 - (void)update:(CFTimeInterval)currentTime {
     
 	/* 
 		Just remember to tell the Schedule to tick each frame!
 	 */
 	[[Scheduler sharedScheduler] tickScheduler:currentTime];
+	
+	_currentTime = currentTime;
+}
+
+- (void)didFinishUpdate {
+	
+	[[Scheduler sharedScheduler] tickAltScheduler:_currentTime];
 }
 
 @end

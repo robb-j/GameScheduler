@@ -10,14 +10,16 @@
 #import "Scheduler+Parent.h"
 #import "ScheduleObject.h"
 
-#define kNoPriority									NSIntegerMax
+#define kDeltaThreashold							0.1f
 
 @implementation Scheduler {
 	
 	BOOL _isIterating;
 	CFTimeInterval _lastTime;
+	CFTimeInterval _lastAltTime;
 	
 	NSMutableArray *_allSchedules;
+	NSMutableArray *_allAltSchedules;
 	
 	NSMutableArray *_addedDuringIteration;
 	NSMutableArray *_removedDuringIteration;
@@ -44,6 +46,7 @@ static Scheduler *_sharedInstance;
 		// Custom Setup
 		_isIterating = NO;
 		_allSchedules = [NSMutableArray array];
+		_allAltSchedules = [NSMutableArray array];
 		
 		_addedDuringIteration = [NSMutableArray array];
 		_removedDuringIteration = [NSMutableArray array];
@@ -146,6 +149,10 @@ static Scheduler *_sharedInstance;
 		[_allSchedules addObject:object];
 		
 	}
+	else if (object.priority == kAltPriority) {
+		
+		[_allAltSchedules addObject:object];
+	}
 	else {
 		
 		// Otherwise, get the insertion index, based on priority (Higher means earlier in the iteration)
@@ -164,27 +171,36 @@ static Scheduler *_sharedInstance;
 
 - (void)unschedule:(id)comparison {
 	
-	NSInteger count = _allSchedules.count;
-	ScheduleObject *object;
+	NSArray *bothSchedules = @[_allSchedules, _allAltSchedules];
 	
 	
-	// Iterate through, comparing them with the provided object
-	for (int i = 0; i < count; i++) {
-		object = _allSchedules[i];
+	// Run with both schedules, do the normal first though
+	for (NSMutableArray *aSchedule in bothSchedules) {
 		
-		if ([object scheduleComparison:comparison]) {
+		
+		NSInteger count = aSchedule.count;
+		ScheduleObject *object;
+		
+		
+		// Iterate through, comparing them with the provided object
+		for (int i = 0; i < count; i++) {
+			object = aSchedule[i];
 			
-			if (_isIterating) {
+			if ([object scheduleComparison:comparison]) {
 				
-				object.isCancelled = YES;
-				[_removedDuringIteration addObject:comparison];
-			}
-			else {
+				if (_isIterating) {
+					
+					object.isCancelled = YES;
+					[_removedDuringIteration addObject:comparison];
+				}
+				else {
+					
+					[aSchedule removeObjectAtIndex:i];
+				}
 				
-				[_allSchedules removeObjectAtIndex:i];
+				// Breaks the loop but still checks the other schedule(s)
+				break;
 			}
-			
-			break;
 		}
 	}
 }
@@ -195,11 +211,12 @@ static Scheduler *_sharedInstance;
 		
 		// If we are iterating, cache to remove after the iteration
 		[_removedDuringIteration addObjectsFromArray:_allSchedules];
+		[_removedDuringIteration addObjectsFromArray:_allAltSchedules];
 	}
 	else {
 		
 		// Copy the array so we can modify ours in the loop
-		NSArray *toRemove = [NSArray arrayWithArray:_allSchedules];
+		NSArray *toRemove = [_allSchedules arrayByAddingObjectsFromArray:_allAltSchedules];
 		
 		
 		// Remove all scheduled objects
@@ -223,12 +240,20 @@ static Scheduler *_sharedInstance;
 - (void)tickScheduler:(CFTimeInterval)currentTime {
 	
 	// Calculate the differenct in time since the last frame
-	CFTimeInterval dt = MIN(currentTime - _lastTime, 0.1f);
+	CFTimeInterval dt = MIN(currentTime - _lastTime, kDeltaThreashold);
 	_lastTime = currentTime;
 	
 	
 	// Tick with that dt
-	[self tick:dt];
+	[self tick:dt alt:NO];
+}
+
+- (void)tickAltScheduler:(CFTimeInterval)currentTime {
+	
+	CFTimeInterval dt = MIN(currentTime - _lastAltTime, kDeltaThreashold);
+	_lastAltTime = currentTime;
+	
+	[self tick:dt alt:YES];
 }
 
 - (void)resetTick:(CFTimeInterval)currentTime {
@@ -237,7 +262,7 @@ static Scheduler *_sharedInstance;
 	_lastTime = currentTime;
 }
 
-- (void)tick:(CFTimeInterval)dt {
+- (void)tick:(CFTimeInterval)dt alt:(BOOL)isAlt {
 	
 	
 	// Remember we're iterating
@@ -245,7 +270,8 @@ static Scheduler *_sharedInstance;
 	
 	
 	// Tick each object
-	for (ScheduleObject *object in _allSchedules) {
+	NSArray *schedules = isAlt ? _allAltSchedules : _allSchedules;
+	for (ScheduleObject *object in schedules) {
 		
 		if ( ! object.isCancelled) {
 			

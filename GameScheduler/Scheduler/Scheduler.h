@@ -10,10 +10,13 @@
 #import "Updatable.h"
 #import "ScheduledBlock.h"
 
+#define kNoPriority									NSIntegerMax
+#define kAltPriority								NSIntegerMax - 1
+
 
 /** An object that schedules objects and blocks for a 'tick' update. ie for each frame of a game. 
  For best practise, have priority in a constants file so you can see the order things get scheduled. 
- @Warning A higher priority means the schedule will get its update earlier
+ @Warning A higher priority means the schedule will get its update earlier, relative to other schedules
  @warning If no priority is given, it will be scheduled last
  */
 @interface Scheduler : NSObject
