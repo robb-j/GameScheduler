@@ -10,8 +10,8 @@
 #import "Updatable.h"
 #import "ScheduledBlock.h"
 
-#define kNoPriority									NSIntegerMax
-#define kAltPriority								NSIntegerMax - 1
+extern NSInteger const kNoPriority;
+extern NSInteger const kAltPriority;
 
 
 /** An object that schedules objects and blocks for a 'tick' update. ie for each frame of a game. 

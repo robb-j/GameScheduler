@@ -12,6 +12,13 @@
 
 #define kDeltaThreashold							0.1f
 
+
+
+NSInteger const kNoPriority = NSIntegerMax;
+NSInteger const kAltPriority = NSIntegerMax - 1;
+
+
+
 @implementation Scheduler {
 	
 	BOOL _isIterating;
