@@ -82,4 +82,10 @@ extern NSInteger const kAltPriority;
 
 
 
+/** The maximum dt that will be passed to schedules */
+@property (nonatomic) CFTimeInterval maxInterval;
+
+
+
+
 @end

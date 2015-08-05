@@ -57,6 +57,8 @@ static Scheduler *_sharedInstance;
 		
 		_addedDuringIteration = [NSMutableArray array];
 		_removedDuringIteration = [NSMutableArray array];
+		
+		_maxInterval = kDeltaThreashold;
 	}
 	return self;
 }
@@ -247,7 +249,7 @@ static Scheduler *_sharedInstance;
 - (void)tickScheduler:(CFTimeInterval)currentTime {
 	
 	// Calculate the differenct in time since the last frame
-	CFTimeInterval dt = MIN(currentTime - _lastTime, kDeltaThreashold);
+	CFTimeInterval dt = MIN(currentTime - _lastTime, _maxInterval);
 	_lastTime = currentTime;
 	
 	
