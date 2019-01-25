@@ -4,6 +4,7 @@
 - Create: Dec 2014
 - Updated: Jun 2015
 
+> **Archived** – This project has been archived and is generally unsupported
 
 ## Features
 - Schedule objects to recieve a `sceneUpdate:` message each frame
